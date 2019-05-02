@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>JS CSS Clock</title>
+	<style>
+		.clock {
+			position: relative;
+			width: 300px;
+			height: 300px;
+			margin: 5%;
+			border-radius: 50%;
+			border: 10px solid #333;
+		}
+
+		.clock__hand {
+			position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    width: 4px;
+		    margin-top: -40%;
+		    height: 40%;
+		    background: #333;
+		    transform-origin: bottom;
+		}
+
+		.clock__hand--second {
+			width: 2px;
+		}
+
+		.clock__hand--hour {
+			height: 32%;
+			margin-top: -32%;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div class="clock">
+			<div class="clock__hand clock__hand--second js-clock-sec"></div>
+			<div class="clock__hand js-clock-min"></div>
+			<div class="clock__hand clock__hand--hour js-clock-hour"></div>
+		</div>
+	</div>
+
+	<script>
+		var clock = {
+			secondsHand: document.querySelector('.js-clock-sec'),
+			minutesHand: document.querySelector('.js-clock-min'),
+			hoursHand: document.querySelector('.js-clock-hour')
+		};
+
+		function getDeg(maxVal, val) {
+			return Math.round((360 / maxVal)) * val;
+		}
+
+		setInterval(() => {
+			let time = new Date();
+
+			clock.secondsHand.style.transform = `rotate(${getDeg(60, time.getSeconds())}deg)`;
+			clock.minutesHand.style.transform = `rotate(${getDeg(60, time.getMinutes())}deg)`;
+			clock.hoursHand.style.transform   = `rotate(${getDeg(12, time.getHours())}deg)`;
+
+		}, 1000);
+	</script>
+</body>
+</html>
