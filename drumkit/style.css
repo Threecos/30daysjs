@@ -1,0 +1,36 @@
+body {
+	background: #ccc;
+	text-align: center;
+}
+
+.key {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 15px;
+	width: 100px;
+	height: 100px;
+	padding-top: 35px;
+	text-align: center;
+	font-size: sans-serif;
+	border: 2px solid #333;
+	cursor: pointer;
+	color: #333;
+
+	transition: all 0.07s;
+}
+
+.key.playing {
+	transform: scale(1.05);
+	border-color: #f3f31b;
+	box-shadow: 0 0 15px 0 rgba(236, 249, 31, 0.85);
+}
+
+.key__title {
+	font-size: 28px;
+	margin: 0;
+}
+
+.key__descr {
+	font-size: 20px;
+	margin: 10px 0 0
+}

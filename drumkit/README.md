@@ -1,0 +1,1 @@
+A Simple Javascript drumkit made by wesbos [30 Day Vanilla JS Challenge](https://github.com/wesbos/JavaScript30) tutorial.
