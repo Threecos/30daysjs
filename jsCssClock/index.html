@@ -51,6 +51,7 @@
 		};
 
 		function getDeg(maxVal, val) {
+			if (val > maxVal) val = val - maxVal;
 			return Math.round((360 / maxVal)) * val;
 		}
 
