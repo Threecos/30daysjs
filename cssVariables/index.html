@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Change CSS Variables</title>
+	<style>
+		:root {
+			--xoffset: 3px;
+			--yoffset: 3px;
+			--blur: 2px;
+			--color: #bbbbbb;
+			--fontsize: 40px;
+		}
+
+		#app {
+			width: 90%;
+			margin: 10% auto;
+		}
+
+		body {
+			background: #fafafa;
+		}
+	
+		h1 {
+			margin: 0 0 35px;
+		}
+
+		.text-shadow {
+			color: #333;
+			font-family: sans-serif;
+			font-size: var(--fontsize);
+			text-transform: uppercase;
+			text-shadow: var(--xoffset) var(--yoffset) var(--blur) var(--color);
+		}
+
+		.text-input {
+			width: 100%;
+			border: 2px solid #ccc;
+			resize: vertical;
+			padding: 15px 5px;
+			background: transparent;
+		}
+
+		.option {
+			display: inline-block;
+			width: 19%;
+			margin-bottom: 25px;
+		}
+
+		.option__title {
+			color: #333;
+			font-family: sans-serif;
+			font-size: 16px;
+			display: block;
+			margin: 0 0 5px;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<h1 class="text-shadow">Text-shadow example</h1>
+
+		<label class="option">
+			<small class="option__title">Font-size</small>
+			<input class="option__value" type="range" min="40" max="80" value="40" name="fontsize" data-suffix="px">
+		</label>
+
+		<label class="option">
+			<small class="option__title">X-offset</small>
+			<input class="option__value" type="range" min="0" max="50" value="3" name="xoffset" data-suffix="px">
+		</label>
+
+		<label class="option">
+			<small class="option__title">Y-offset</small>
+			<input class="option__value" type="range" min="0" max="50" value="3" name="yoffset" data-suffix="px">
+		</label>
+
+		<label class="option">
+			<small class="option__title">Blur</small>
+			<input class="option__value" type="range" min="0" max="50" value="2" name="blur" data-suffix="px">
+		</label>
+
+		<label class="option">
+			<small class="option__title">Color</small>
+			<input class="option__value" type="color" value="#bbbbbb" name="color">
+		</label>
+
+		<textarea class="text-input text-shadow" placeholder="Text here" rows="5">Type your text here</textarea>
+	</div>
+
+	<script>
+		const options = document.querySelectorAll('.option__value');
+
+		function applyChange() {
+			let suffix = this.dataset.suffix || '';
+
+			document.querySelector('body').style.setProperty(`--${this.name}`, this.value + suffix);
+		}
+
+		options.forEach(function(option) {
+			option.addEventListener('change', applyChange);
+			option.addEventListener('mousemove', applyChange);
+		});
+
+	</script>
+</body>
+</html>
