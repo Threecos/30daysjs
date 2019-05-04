@@ -41,7 +41,6 @@
             let html = cities.filter((item) => {
                 return item.city.match(regexp) || item.state.match(regexp);
             }).map((item) => {
-                const regexp = new RegExp(this.value, 'gi');
                 const city = item.city.replace(regexp, `<span class="hl">${this.value}</span>`);
                 const state = item.state.replace(regexp, `<span class="hl">${this.value}</span>`);
                 
