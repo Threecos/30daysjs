@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Flex Panels</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="app">
+		<div class="panels">
+			<div class="panel" style="background-image: url(https://picsum.photos/id/1006/600/1000)">
+				<p>Text top</p>
+				<p>Text center</p>
+				<p>Text bottom</p>
+			</div>
+
+			<div class="panel" style="background-image: url(https://picsum.photos/id/1002/600/1000)">
+				<p>Text top</p>
+				<p>Text center</p>
+				<p>Text bottom</p>
+			</div>
+
+			<div class="panel" style="background-image: url(https://picsum.photos/id/1003/600/1000)">
+				<p>Text top</p>
+				<p>Text center</p>
+				<p>Text bottom</p>
+			</div>
+
+			<div class="panel" style="background-image: url(https://picsum.photos/id/1004/600/1000)">
+				<p>Text top</p>
+				<p>Text center</p>
+				<p>Text bottom</p>
+			</div>
+
+			<div class="panel" style="background-image: url(https://picsum.photos/id/1005/600/1000)">
+				<p>Text top</p>
+				<p>Text center</p>
+				<p>Text bottom</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const panels = document.querySelectorAll('.panel');
+		
+		panels.forEach((panel) => {
+			panel.addEventListener('click', () => {
+				panel.classList.toggle('open');
+			});
+
+			panel.addEventListener('transitionend', (e) => {
+				if (e.propertyName == 'flex-grow') {
+					panel.classList.toggle('panel-opened');
+				}
+			});
+		});
+	</script>
+</body>
+</html>

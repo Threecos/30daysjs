@@ -1,0 +1,59 @@
+body {
+	margin: 0;
+}
+
+.panels {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.panel {
+	display: flex;
+	flex: 1;
+	height: 100vh;
+	align-items: center;
+	justify-content: center;
+	flex-flow: column;
+	overflow: hidden;
+	background-position: center;
+	background-size: cover;
+	font-size: 30px;
+
+	transition:
+        font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        background 0.2s;
+
+	cursor: pointer;
+}
+
+p {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	margin: auto;
+	font-size: inherit;
+	font-family: sans-serif;
+	font-weight: 100;
+	color: #fff;
+	text-align: center;
+	transition: transform .4s linear;
+}
+
+p:first-of-type {
+	transform: translateY(-100%);
+}
+
+p:last-of-type {
+	transform: translateY(100%);
+}
+
+.panel-opened p {
+	transform: translateY(0);
+}
+
+.panel.open {
+	flex: 3;
+	font-size: 40px;
+}
