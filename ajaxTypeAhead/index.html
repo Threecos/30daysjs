@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <form class="search-form">
+        <input type="text" class="search" placeholder="City or State">
+        <ul class="suggestions">
+            <li>Filter for a city</li>
+            <li>or a state</li>
+        </ul>
+    </form>
+    
+    <script>
+        const searchInput = document.querySelector('.search');
+        const suggestions = document.querySelector('.suggestions');
+        
+        const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+        let cities = [];
+
+        searchInput.disabled = true;
+
+        fetch(endpoint)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                cities = data;
+                console.log('cities loaded');
+                searchInput.disabled = false;
+            })
+
+        function findMatches() {
+            const regexp = new RegExp(this.value, 'gi');
+            
+            let html = cities.filter((item) => {
+                return item.city.match(regexp) || item.state.match(regexp);
+            }).map((item) => {
+                const regexp = new RegExp(this.value, 'gi');
+                const city = item.city.replace(regexp, `<span class="hl">${this.value}</span>`);
+                const state = item.state.replace(regexp, `<span class="hl">${this.value}</span>`);
+                
+                return `
+                    <li>
+                        <span class="name">${city}, ${state}</span>
+                        <span class="population">${numberWithCommas(item.population)}</span>
+                    </li>
+                `;
+            }).join('');
+
+            if (this.value == 0) html = `<li>Filter for a city</li><li>or a state</li>`;
+            if (html.length == 0) html = `<li>No matches</li>`;
+
+            suggestions.innerHTML = html;
+        }
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        searchInput.addEventListener('keyup', findMatches);
+        searchInput.addEventListener('change', findMatches);
+        
+    </script>
+</body>
+
+</html>
