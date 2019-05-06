@@ -15,11 +15,12 @@
             padding: 15px;
         }
 
-        .paint__pallet {
+        .paint__options {
             flex: 0 1 80px;
         }
 
         .paint__canvas {
+            position: relative;
             flex: 1 0 50%;
         }
 
@@ -42,30 +43,49 @@
         .pallet__color--active {
             border-color: #af2424;
         }
+
+        .canvas-cursor {
+            position: absolute;
+            display: none;
+            width: 10px;
+            height: 10px;
+            background: #333;
+            z-index: 5;
+        }
+
     </style>
 </head>
 
 <body>
 
     <div class="paint">
-        <div class="paint__pallet pallet">
-            <div class="pallet__color pallet__color--active" data-color="#333" style="background: #333"></div>
-            <div class="pallet__color" data-color="#f00" style="background: #f00"></div>
-            <div class="pallet__color" data-color="#0f0" style="background: #0f0"></div>
-            <div class="pallet__color" data-color="#00f" style="background: #00f"></div>
+        <div class="paint__options">
+            <div class="pallet">
+                <div class="pallet__color pallet__color--active" data-color="#333" style="background: #333"></div>
+                <div class="pallet__color" data-color="#f00" style="background: #f00"></div>
+                <div class="pallet__color" data-color="#0f0" style="background: #0f0"></div>
+                <div class="pallet__color" data-color="#00f" style="background: #00f"></div>
+                <div class="pallet__color" data-color="#fff" style="background: #fff"></div>
+                <div class="pallet__color" data-color="#FFCD43" style="background: #FFCD43"></div>
+            </div>
+
+            <input type="range" min="1" max="30" value="10" name="brush_width">
         </div>
         <div class="paint__canvas">
+            <span class="canvas-cursor"></span>
             <canvas id="canvas"></canvas>
         </div>
     </div>
 
     <script>
         const canvas = document.getElementById('canvas');
+        const canvasCursor = document.querySelector('.canvas-cursor');
         const canvasContainer = document.querySelector('.paint__canvas');
         const colors = document.querySelectorAll('.pallet__color');
-        const cursorOffsetFix = 5;
+        const brushWidthInput = document.querySelector('[name="brush_width"]');
 
         let currentColor = '#333';
+        let brushWidth = 10;
 
         if (canvas.getContext) {
 
@@ -74,9 +94,10 @@
 
             const ctx = canvas.getContext('2d');
             
-            ctx.lineWidth = 20;
+            ctx.lineWidth = brushWidth;
             ctx.strokeStyle = currentColor;
             ctx.lineJoin = 'round';
+            // ctx.lineCap = 'square';
             ctx.lineCap = 'round';
 
             let isDrawing = false;
@@ -88,22 +109,50 @@
 
                 ctx.beginPath();
                 ctx.moveTo(lastX, lastY); 
-                [lastX, lastY] = [e.offsetX + cursorOffsetFix, e.offsetY + cursorOffsetFix];
+                [lastX, lastY] = [e.offsetX, e.offsetY];
                 
                 ctx.lineTo(lastX, lastY);
                 ctx.stroke();
             }
 
-            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mousemove', (e) => {
+                draw(e);
+
+                canvasCursor.style.transform = `translate(${e.offsetX}px, ${e.offsetY}px)`;
+                requestAnimationFrame();
+            });
+
             canvas.addEventListener('mousedown', (e) => {
                 isDrawing = true;
-                [lastX, lastY] = [e.offsetX + cursorOffsetFix, e.offsetY + cursorOffsetFix];
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+                canvasCursor.style.display = 'none';
 
                 draw(e);
             });
 
-            canvas.addEventListener('mouseup', () => isDrawing = false);
-            canvas.addEventListener('mouseout', () => isDrawing = false);
+            canvas.addEventListener('mouseup', () => {
+                isDrawing = false;
+                canvasCursor.style.display = 'block';
+            });
+
+            canvas.addEventListener('mouseenter', (e) => {
+                canvasCursor.style.display = 'block';
+            });
+
+            canvasCursor.addEventListener('mouseenter', (e) => {
+                canvasCursor.style.display = 'block';
+            });
+
+            canvas.addEventListener('mouseout', () => {
+                isDrawing = false;
+                canvasCursor.style.display = 'none';
+            });
+            
+            brushWidthInput.addEventListener('change', function() {
+                ctx.lineWidth = this.value
+                // canvasCursor.style.width  = this.value + 'px';
+                // canvasCursor.style.height = this.value + 'px';
+            });
 
             colors.forEach((color) => {
                 color.addEventListener('click', function() {
@@ -111,6 +160,7 @@
                     previousActive.classList.remove('pallet__color--active');
 
                     ctx.strokeStyle = this.dataset.color;
+                    canvasCursor.style.background = this.dataset.color;
                     this.classList.add('pallet__color--active');
                 });
             });
