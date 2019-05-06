@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas Paint</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .paint {
+            display: flex;
+            align-items: top;
+            padding: 15px;
+        }
+
+        .paint__pallet {
+            flex: 0 1 80px;
+        }
+
+        .paint__canvas {
+            flex: 1 0 50%;
+        }
+
+        #canvas {
+            box-sizing: border-box;
+            border: 10px solid #333;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pallet__color {
+            float: left;
+            box-sizing: border-box;
+            border: 3px solid #ccc;
+            width: 40px;
+            padding-top: 34px;
+            cursor: pointer;
+        }
+
+        .pallet__color--active {
+            border-color: #af2424;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="paint">
+        <div class="paint__pallet pallet">
+            <div class="pallet__color pallet__color--active" data-color="#333" style="background: #333"></div>
+            <div class="pallet__color" data-color="#f00" style="background: #f00"></div>
+            <div class="pallet__color" data-color="#0f0" style="background: #0f0"></div>
+            <div class="pallet__color" data-color="#00f" style="background: #00f"></div>
+        </div>
+        <div class="paint__canvas">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const canvasContainer = document.querySelector('.paint__canvas');
+        const colors = document.querySelectorAll('.pallet__color');
+        const cursorOffsetFix = 5;
+
+        let currentColor = '#333';
+
+        if (canvas.getContext) {
+
+            canvas.width = canvasContainer.clientWidth;
+            canvas.height = canvasContainer.clientHeight;
+
+            const ctx = canvas.getContext('2d');
+            
+            ctx.lineWidth = 20;
+            ctx.strokeStyle = currentColor;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            function draw(e) {
+                if (!isDrawing) return false;
+
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY); 
+                [lastX, lastY] = [e.offsetX + cursorOffsetFix, e.offsetY + cursorOffsetFix];
+                
+                ctx.lineTo(lastX, lastY);
+                ctx.stroke();
+            }
+
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX + cursorOffsetFix, e.offsetY + cursorOffsetFix];
+
+                draw(e);
+            });
+
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseout', () => isDrawing = false);
+
+            colors.forEach((color) => {
+                color.addEventListener('click', function() {
+                    let previousActive = document.querySelector('.pallet__color--active');
+                    previousActive.classList.remove('pallet__color--active');
+
+                    ctx.strokeStyle = this.dataset.color;
+                    this.classList.add('pallet__color--active');
+                });
+            });
+
+        } else {
+            alert('Oops, your browser doesn\'t support HTML Canvas');
+        }
+
+    </script>
+</body>
+
+</html>
