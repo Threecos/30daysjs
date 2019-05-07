@@ -89,18 +89,17 @@
     </div>
     <script>
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        let shiftPressed = false;
         let lastIndex = null;
 
-        window.addEventListener('keydown', (e) => shiftPressed = e.keyCode == 16);
-        window.addEventListener('keyup', (e) => shiftPressed = false);
-
         checkboxes.forEach(function(checkbox, index) {
-            checkbox.addEventListener('click', function() {
+            checkbox.addEventListener('click', function(e) {
 
-                if (shiftPressed && typeof(lastIndex) !== null) {
-                    let from = (lastIndex > index) ? index : lastIndex;
-                    let to = (lastIndex > index) ? lastIndex : index;
+                if (e.shiftKey && typeof(lastIndex) !== null) {
+                    if (lastIndex > index) {
+                        [from, to] = [index, lastIndex];
+                    } else {
+                        [from, to] = [lastIndex, index];
+                    }
 
                     for (var i = from + 1; i < to; i++) {
                         checkboxes[i].checked = true;
